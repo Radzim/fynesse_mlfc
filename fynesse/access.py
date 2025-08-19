@@ -2,7 +2,9 @@ from .config import *
 # This file accesses the data
 import osmnx as ox
 import matplotlib.pyplot as plt
+import geopandas as gpd
 import math
+gpd.options.plotting.backend = "matplotlib"
 
 def print_message():
     return 'access loaded'
