@@ -1,11 +1,7 @@
 from .config import *
-# This file accesses the data
 import osmnx as ox
 import matplotlib.pyplot as plt
 import math
-
-def print_message():
-    return 'access loaded'
 
 def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None):
     """
@@ -23,26 +19,37 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
         Tags dict for POIs (e.g. {"amenity": ["school", "restaurant"]}).
     """
 
-    # convert km to degrees
+    # Convert km to degrees
     lat_offset = (box_size_km / 2) / 111
-    lon_offset = (box_size_km / 2) / (111*math.cos(math.radians(latitude)))
+    lon_offset = (box_size_km / 2) / (111 * math.cos(math.radians(latitude)))
 
     north = latitude + lat_offset
     south = latitude - lat_offset
-    east  = longitude + lon_offset
-    west  = longitude - lon_offset
+    east = longitude + lon_offset
+    west = longitude - lon_offset
     bbox = (west, south, east, north)
 
-    # Query area boundary
+    # Area boundary
     area = ox.geocode_to_gdf(place_name).to_crs(epsg=4326)
-    graph = ox.graph_from_bbox(bbox)
+
+    # Road graph
+    graph = ox.graph_from_bbox(north, south, east, west, network_type="all")
     nodes, edges = ox.graph_to_gdfs(graph)
-    buildings = ox.features_from_bbox(bbox, tags={"building": True})
+
+    # Buildings & POIs
+    buildings = ox.features_from_bbox(north, south, east, west, tags={"building": True})
+    pois = None
+    if poi_tags:
+        pois = ox.features_from_bbox(north, south, east, west, tags=poi_tags)
+
+    # Ensure correct geometry column
     nodes = nodes.set_geometry("geometry")
     edges = edges.set_geometry("geometry")
     buildings = buildings.set_geometry("geometry")
     if pois is not None:
         pois = pois.set_geometry("geometry")
+
+    # Plot
     fig, ax = plt.subplots(figsize=(6, 6))
     area.plot(ax=ax, color="tan", alpha=0.5)
     if not buildings.empty:
