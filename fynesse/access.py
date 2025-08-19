@@ -35,30 +35,22 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
 
     # Query area boundary
     area = ox.geocode_to_gdf(place_name).to_crs(epsg=4326)
-
-    # Buildings
-    buildings = ox.features_from_bbox(bbox, tags={"building": True})
-
-    # Road graph
-    graph = ox.graph_from_bbox(bbox, network_type="all")
-    nodes, edges = ox.graph_to_gdfs(graph)
-
-    # Optional POIs
-    pois = None
-    if poi_tags:
-        pois = ox.features_from_bbox(bbox, tags=poi_tags)
-
-    # Plot
+    nodes = nodes.set_geometry("geometry")
+    edges = edges.set_geometry("geometry")
+    buildings = buildings.set_geometry("geometry")
+    if pois is not None:
+        pois = pois.set_geometry("geometry")
     fig, ax = plt.subplots(figsize=(6, 6))
     area.plot(ax=ax, color="tan", alpha=0.5)
     if not buildings.empty:
         buildings.plot(ax=ax, facecolor="gray", edgecolor="gray", linewidth=0.5)
-    edges.plot(ax=ax, color="black", linewidth=1, alpha=0.3)
-    nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
+    edges.plot(ax=ax, color="black", linewidth=1, alpha=0.3, column=None)
+    nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3, column=None)
     if pois is not None and not pois.empty:
-        pois.plot(ax=ax, color="green", markersize=5, alpha=1)
+        pois.plot(ax=ax, color="green", markersize=5, alpha=1, column=None)
     ax.set_xlim(west, east)
     ax.set_ylim(south, north)
     ax.set_title(place_name, fontsize=14)
+    ax.axis("off")
     plt.tight_layout()
     plt.show()
