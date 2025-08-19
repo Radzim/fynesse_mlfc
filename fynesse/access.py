@@ -22,7 +22,7 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
 
     # convert km to degrees
     lat_offset = (box_size_km / 2) / 111
-    lon_offset = (box_size_km / 2) / 111 #* math.cos(math.radians(latitude)))
+    lon_offset = (box_size_km / 2) / (111*math.cos(math.radians(latitude)))
 
     north = latitude + lat_offset
     south = latitude - lat_offset
