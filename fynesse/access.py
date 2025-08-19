@@ -4,6 +4,9 @@ import osmnx as ox
 import matplotlib.pyplot as plt
 import math
 
+def print_message():
+    return 'access loaded'
+
 def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None):
     """
     Plot a simple city map with area boundary, buildings, roads, nodes, and optional POIs.
