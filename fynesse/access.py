@@ -49,15 +49,16 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
         pois = ox.features_from_bbox(bbox, tags=poi_tags)
 
     # Plot
-    fig, ax = plt.subplots(figsize=(6,6))
+    fig, ax = plt.subplots(figsize=(6, 6))
     area.plot(ax=ax, color="tan", alpha=0.5)
     if not buildings.empty:
-        buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
-    edges.plot(ax=ax, linewidth=1, edgecolor="black", column=None, alpha=0.3)
-    nodes.plot(ax=ax, color="black", markersize=1, column=None, alpha=0.3)
+        buildings.plot(ax=ax, facecolor="gray", edgecolor="gray", linewidth=0.5)
+    edges.plot(ax=ax, color="black", linewidth=1, alpha=0.3)
+    nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
     if pois is not None and not pois.empty:
         pois.plot(ax=ax, color="green", markersize=5, alpha=1)
     ax.set_xlim(west, east)
     ax.set_ylim(south, north)
     ax.set_title(place_name, fontsize=14)
+    plt.tight_layout()
     plt.show()
