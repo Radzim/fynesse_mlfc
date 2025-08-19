@@ -33,14 +33,14 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
     area = ox.geocode_to_gdf(place_name).to_crs(epsg=4326)
 
     # Road graph
-    graph = ox.graph_from_bbox(north, south, east, west, network_type="all")
+    graph = ox.graph_from_bbox(bbox, network_type="all")
     nodes, edges = ox.graph_to_gdfs(graph)
 
     # Buildings & POIs
-    buildings = ox.features_from_bbox(north, south, east, west, tags={"building": True})
+    buildings = ox.features_from_bbox(bbox, tags={"building": True})
     pois = None
     if poi_tags:
-        pois = ox.features_from_bbox(north, south, east, west, tags=poi_tags)
+        pois = ox.features_from_bbox(bbox, tags=poi_tags)
 
     # Ensure correct geometry column
     nodes = nodes.set_geometry("geometry")
