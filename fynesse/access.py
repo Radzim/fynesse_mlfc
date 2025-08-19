@@ -2,9 +2,7 @@ from .config import *
 # This file accesses the data
 import osmnx as ox
 import matplotlib.pyplot as plt
-import geopandas as gpd
 import math
-gpd.options.plotting.backend = "matplotlib"
 
 def print_message():
     return 'access loaded'
@@ -55,8 +53,8 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
     area.plot(ax=ax, color="tan", alpha=0.5)
     if not buildings.empty:
         buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
-    edges.plot(ax=ax, linewidth=1, edgecolor="black", alpha=0.3)
-    nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
+    edges.plot(ax=ax, linewidth=1, edgecolor="black", column=None, alpha=0.3)
+    nodes.plot(ax=ax, color="black", markersize=1, column=None, alpha=0.3)
     if pois is not None and not pois.empty:
         pois.plot(ax=ax, color="green", markersize=5, alpha=1)
     ax.set_xlim(west, east)
