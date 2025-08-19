@@ -35,6 +35,8 @@ def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None)
 
     # Query area boundary
     area = ox.geocode_to_gdf(place_name).to_crs(epsg=4326)
+    graph = ox.graph_from_bbox(bbox)
+    nodes, edges = ox.graph_to_gdfs(graph)
     nodes = nodes.set_geometry("geometry")
     edges = edges.set_geometry("geometry")
     buildings = buildings.set_geometry("geometry")
